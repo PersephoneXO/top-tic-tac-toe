@@ -1,0 +1,12 @@
+
+.game-container{
+    display: grid;
+    grid-template-columns: repeat(3,min-content);
+    gap: 0;
+}
+
+.box{
+    border: 1px black solid;
+    height: 100px;
+    width: 100px;
+}
