@@ -3,6 +3,7 @@
     display: grid;
     grid-template-columns: repeat(3,min-content);
     gap: 0;
+    width: min-content;
 }
 
 .box{
