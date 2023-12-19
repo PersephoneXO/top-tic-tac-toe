@@ -8,11 +8,12 @@ const gridBoxes=document.getElementsByClassName('box');
 
 //create an event listener for the game container that can get the index of which box was clicked
 let targetBox;
-function activateEventListener(){
+function activateEventListener(callback){
     function clickHandler(e){
         if(e.target.tagName.toLowerCase()==='div'){
             targetBox=Array.from(gameContainer.children).indexOf(e.target);
-            console.log(targetBox);
+            callback();
+            gameContainer.removeEventListener('click',clickHandler);
         };
     };
 
@@ -65,11 +66,17 @@ function gameFlow(){
     let currentPlayer;
 
    // while(player1.win==false&&player2.win==false){
-        whosTurn(round,player1,player2,currentPlayer);
-        activateEventListener();
+        activateEventListener(()=>{
+            currentPlayer=whosTurn(round,player1,player2);
+            round++;
+
+            if(currentGameboard[Number(targetBox)]&& currentGameboard[Number(targetBox)].length===0){
+                playTurn(currentPlayer,targetBox,currentGameboard);
+
+            }
 
 
-
+    });
    // }
 };
 
@@ -88,11 +95,10 @@ function playTurn(currentPlayer,targetBox,currentGameboard){
 
 
 //determine turn function
-function whosTurn(round,player1,player2,currentPlayer){
+function whosTurn(round,player1,player2){
     if(round%2==0){
-        currentPlayer=player1;
+        return player1;
     }
-    else{currentPlayer=player2}
-    round++;
-    return currentPlayer;
+    else{return player2}
+
 };
