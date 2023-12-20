@@ -13,7 +13,6 @@ function activateEventListener(callback){
         if(e.target.tagName.toLowerCase()==='div'){
             targetBox=Array.from(gameContainer.children).indexOf(e.target);
             callback();
-            gameContainer.removeEventListener('click',clickHandler);
         };
     };
 
@@ -28,11 +27,13 @@ startButton.addEventListener('click',(e)=>{
 });
 
 
+
+
 //initialize game
 const init=(function(){
     //create gameboard function
     const createGameboard=()=>{
-        gameContainer.innerHTML="";
+        gameContainer.textContent="";
 
         //initialize each box in the gameboard
         for(let i=0;i<9;i++){
@@ -61,23 +62,46 @@ function gameFlow(){
     let player1=init.createPlayer('Player 1','x');
     let player2=init.createPlayer('Player 2','o');
 
-    let currentGameboard=[[],[],[],[],[],[],[],[]];
+    let currentGameboard=[[],[],[],[],[],[],[],[],[]];
     let round=0;
     let currentPlayer;
+    let checkWin=null;
+    let winner;
 
-   // while(player1.win==false&&player2.win==false){
         activateEventListener(()=>{
             currentPlayer=whosTurn(round,player1,player2);
             round++;
 
-            if(currentGameboard[Number(targetBox)]&& currentGameboard[Number(targetBox)].length===0){
-                playTurn(currentPlayer,targetBox,currentGameboard);
+            if(checkWin==null&&round<=9){
+                if(currentGameboard[Number(targetBox)].length===0){
+                    playTurn(currentPlayer,targetBox,currentGameboard);
+                    checkWin=checkForWin(currentGameboard);
+                    if(checkWin!==null){
+                        if(checkWin==='x'){
+                            winner=player1;
+                            player1.win=true;
+                        }
+                        else{
+                            winner=player2;
+                            player2.win=true;
+                        }
+
+                        console.log(`${winner.name} wins!`);
+                        return `${winner.name} wins!`;
+                    }
+
+
+                }
+
+                if (round==9&&checkWin==null){
+                    console.log("It's a tie!");
+                    return "It's a tie!";
+                }
 
             }
 
-
     });
-   // }
+
 };
 
 
@@ -102,3 +126,63 @@ function whosTurn(round,player1,player2){
     else{return player2}
 
 };
+
+
+//check if the turn played resulted in a win
+
+function checkForWin(currentGameboard){
+    /*let marker=null;
+    //check for horizontal wins
+    if(currentGameboard[0]===currentGameboard[1]&&currentGameboard[1]===currentGameboard[2]){
+        marker=currentGameboard[0][0];
+    }
+    else if(currentGameboard[3]===currentGameboard[4]&&currentGameboard[4]===currentGameboard[5]){
+        marker=currentGameboard[3][0];
+    }
+    else if(currentGameboard[6]===currentGameboard[7]&&currentGameboard[7]===currentGameboard[8]){
+        marker=currentGameboard[6][0];
+    }
+    //check for vertical wins
+    else if(currentGameboard[0]===currentGameboard[3]&&currentGameboard[3]===currentGameboard[6]){
+        marker=currentGameboard[0][0];
+    }
+    else if(currentGameboard[1]===currentGameboard[4]&&currentGameboard[4]===currentGameboard[7]){
+        marker=currentGameboard[1][0];
+    }
+    else if(currentGameboard[2]===currentGameboard[5]&&currentGameboard[5]===currentGameboard[8]){
+        marker=currentGameboard[2][0];
+    }
+    //check for diagonal wins
+    else if(currentGameboard[0]===currentGameboard[4]&&currentGameboard[4]===currentGameboard[8]){
+        marker=currentGameboard[0][0];
+    }
+    else if(currentGameboard[6]===currentGameboard[4]&&currentGameboard[4]===currentGameboard[2]){
+        marker=currentGameboard[6][0];
+    }
+
+    //return the winner if there is one
+    if(marker=='x'){
+        return player1;
+    }
+    else if(marker=='o'){
+        return player2;
+    }
+    else{return marker};
+    */
+    const winningCombos=[
+        [0,1,2],[3,4,5],[6,7,8], //horizontal combos
+        [0,3,6],[1,4,7],[2,5,8], //vertical combos
+        [0,4,8],[6,4,2]          //diagonal combos
+    ]
+
+    for(const combo of winningCombos){
+        const [a,b,c]=combo;
+        if(currentGameboard[a].length>0 &&
+            currentGameboard[a][0]===currentGameboard[b][0] &&
+            currentGameboard[b][0]===currentGameboard[c][0]){
+                return currentGameboard[a][0]==='x' ? 'x' : 'o';
+            }
+    }
+
+    return null;
+}
