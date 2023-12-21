@@ -2,7 +2,10 @@
 const gameContainer=document.querySelector('.game-container');
 const startButton=document.querySelector('.start-button');
 const gridBoxes=document.getElementsByClassName('box');
-
+const namePlayersDialog=document.querySelector('#name-players-dialog');
+const cancelButton=document.querySelector('#cancel-button');
+const submitNamesButton=document.querySelector('#enter-names-button');
+const namePlayersForm=document.querySelector('.name-players-form');
 
 //event listeners
 
@@ -19,12 +22,38 @@ function activateEventListener(callback){
     gameContainer.addEventListener('click',clickHandler);
 };
 
-
-//press button to start game
+//press button to open the dialog
 startButton.addEventListener('click',(e)=>{
-    startButton.remove();
-    gameFlow();
+    namePlayersDialog.showModal();
 });
+
+
+//close modal on x button
+cancelButton.addEventListener('click',(e)=>{
+    namePlayersDialog.close();
+});
+
+
+//submit player names and start the game
+submitNamesButton.addEventListener('click',(e)=>{
+    e.preventDefault();
+    let player1Name=document.querySelector('#player1-name').value;
+    let player2Name=document.querySelector('#player2-name').value;
+
+    let player1=init.createPlayer(player1Name,'x');
+    let player2=init.createPlayer(player2Name,'o');
+
+    namePlayersDialog.close();
+    namePlayersForm.reset();
+    startButton.remove();
+
+    gameFlow(player1,player2);
+});
+
+
+
+
+
 
 
 
@@ -56,12 +85,12 @@ const init=(function(){
 
 
 
-function gameFlow(){
+function gameFlow(player1,player2){
     init.createGameboard();
-
+    /*
     let player1=init.createPlayer('Player 1','x');
     let player2=init.createPlayer('Player 2','o');
-
+    */
     let currentGameboard=[[],[],[],[],[],[],[],[],[]];
     let round=0;
     let currentPlayer;

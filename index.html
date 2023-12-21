@@ -17,5 +17,28 @@
 
         </div>
     </div>
+
+
+    <!--GetPlayerNames Modal Dialog-->
+    <dialog id="name-players-dialog">
+        <div class="input-container">
+            <form class="name-players-form" method="post">
+                <button id="cancel-button" formmethod="dialog" formnovalidate>x</button>
+
+                <div class="player1-input">
+                    <label for="player1-name">Player 1:</label>
+                    <input type="text" id="player1-name" name="player1-name" placeholder="Player 1's Name Here" required>
+                </div>
+
+                <div class="player2-input">
+                    <label for="player2-name">Player 2:</label>
+                    <input type="text" id="player2-name" name="player2-name" placeholder="Player 2's Name Here" required>
+                </div>
+                <button id="enter-names-button" type="submit" value="enter-names-button" formmethod="post">Continue</button>
+            </form>
+        </div>
+    </dialog>
+
+
 </body>
 </html>
