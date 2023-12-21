@@ -35,20 +35,26 @@ cancelButton.addEventListener('click',(e)=>{
 
 
 //submit player names and start the game
-submitNamesButton.addEventListener('click',(e)=>{
+namePlayersForm.addEventListener('submit',(e)=>{
     e.preventDefault();
     let player1Name=document.querySelector('#player1-name').value;
     let player2Name=document.querySelector('#player2-name').value;
 
-    let player1=init.createPlayer(player1Name,'x');
-    let player2=init.createPlayer(player2Name,'o');
+    if(player1Name.length<1||player2Name.length<1){
+        alert('Please fill out players names');
+    }
+    else{
+        let player1=init.createPlayer(player1Name,'x');
+        let player2=init.createPlayer(player2Name,'o');
 
-    namePlayersDialog.close();
-    namePlayersForm.reset();
-    startButton.remove();
+        namePlayersDialog.close();
+        namePlayersForm.reset();
+        startButton.remove();
 
-    gameFlow(player1,player2);
+        gameFlow(player1,player2);
+    }
 });
+
 
 
 
