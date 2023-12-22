@@ -6,6 +6,8 @@ const namePlayersDialog=document.querySelector('#name-players-dialog');
 const cancelButton=document.querySelector('#cancel-button');
 const submitNamesButton=document.querySelector('#enter-names-button');
 const namePlayersForm=document.querySelector('.name-players-form');
+const announcePlayerTurn=document.querySelector('#announce-turn');
+
 
 //event listeners
 
@@ -51,16 +53,10 @@ namePlayersForm.addEventListener('submit',(e)=>{
         namePlayersForm.reset();
         startButton.remove();
 
+
         gameFlow(player1,player2);
     }
 });
-
-
-
-
-
-
-
 
 
 
@@ -92,23 +88,40 @@ const init=(function(){
 
 
 function gameFlow(player1,player2){
+
     init.createGameboard();
-    /*
-    let player1=init.createPlayer('Player 1','x');
-    let player2=init.createPlayer('Player 2','o');
-    */
+
     let currentGameboard=[[],[],[],[],[],[],[],[],[]];
     let round=0;
     let currentPlayer;
     let checkWin=null;
     let winner;
 
+        if(round==0){
+            announceTurn(player1);
+        }
+
+
+
+
         activateEventListener(()=>{
             currentPlayer=whosTurn(round,player1,player2);
+
+            if(currentPlayer===player1){
+                announceTurn(player2);
+            }
+            else{
+                announceTurn(player1);
+            }
+
             round++;
 
+
+
             if(checkWin==null&&round<=9){
+
                 if(currentGameboard[Number(targetBox)].length===0){
+
                     playTurn(currentPlayer,targetBox,currentGameboard);
                     checkWin=checkForWin(currentGameboard);
                     if(checkWin!==null){
@@ -164,46 +177,7 @@ function whosTurn(round,player1,player2){
 
 
 //check if the turn played resulted in a win
-
 function checkForWin(currentGameboard){
-    /*let marker=null;
-    //check for horizontal wins
-    if(currentGameboard[0]===currentGameboard[1]&&currentGameboard[1]===currentGameboard[2]){
-        marker=currentGameboard[0][0];
-    }
-    else if(currentGameboard[3]===currentGameboard[4]&&currentGameboard[4]===currentGameboard[5]){
-        marker=currentGameboard[3][0];
-    }
-    else if(currentGameboard[6]===currentGameboard[7]&&currentGameboard[7]===currentGameboard[8]){
-        marker=currentGameboard[6][0];
-    }
-    //check for vertical wins
-    else if(currentGameboard[0]===currentGameboard[3]&&currentGameboard[3]===currentGameboard[6]){
-        marker=currentGameboard[0][0];
-    }
-    else if(currentGameboard[1]===currentGameboard[4]&&currentGameboard[4]===currentGameboard[7]){
-        marker=currentGameboard[1][0];
-    }
-    else if(currentGameboard[2]===currentGameboard[5]&&currentGameboard[5]===currentGameboard[8]){
-        marker=currentGameboard[2][0];
-    }
-    //check for diagonal wins
-    else if(currentGameboard[0]===currentGameboard[4]&&currentGameboard[4]===currentGameboard[8]){
-        marker=currentGameboard[0][0];
-    }
-    else if(currentGameboard[6]===currentGameboard[4]&&currentGameboard[4]===currentGameboard[2]){
-        marker=currentGameboard[6][0];
-    }
-
-    //return the winner if there is one
-    if(marker=='x'){
-        return player1;
-    }
-    else if(marker=='o'){
-        return player2;
-    }
-    else{return marker};
-    */
     const winningCombos=[
         [0,1,2],[3,4,5],[6,7,8], //horizontal combos
         [0,3,6],[1,4,7],[2,5,8], //vertical combos
@@ -220,4 +194,11 @@ function checkForWin(currentGameboard){
     }
 
     return null;
+}
+
+
+//function that announces who's turn it is
+function announceTurn(currentPlayer){
+    let playerName=currentPlayer.name;
+    announcePlayerTurn.textContent=`Your turn ${playerName}`
 }
