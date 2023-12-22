@@ -7,6 +7,9 @@ const cancelButton=document.querySelector('#cancel-button');
 const submitNamesButton=document.querySelector('#enter-names-button');
 const namePlayersForm=document.querySelector('.name-players-form');
 const announceElement=document.querySelector('#announcement');
+const resetContainer=document.querySelector('.reset-container');
+const startButtonContainer=document.querySelector('.start-button-container');
+
 
 
 //event listeners
@@ -36,6 +39,19 @@ cancelButton.addEventListener('click',(e)=>{
 });
 
 
+//restart game on button click
+resetContainer.addEventListener('click',(e)=>{
+    if(e.target.id=='restart-button'){
+
+    gameContainer.innerHTML='';
+    announceElement.textContent='';
+    document.querySelector('#restart-button').remove();
+    startButton.style.display='block';
+    return startButtonContainer;
+    }
+});
+
+
 //submit player names and start the game
 namePlayersForm.addEventListener('submit',(e)=>{
     e.preventDefault();
@@ -51,7 +67,7 @@ namePlayersForm.addEventListener('submit',(e)=>{
 
         namePlayersDialog.close();
         namePlayersForm.reset();
-        startButton.remove();
+        startButton.style.display='none';
 
 
         gameFlow(player1,player2);
@@ -197,22 +213,35 @@ function checkForWin(currentGameboard){
 
 
 //announcement object
-
 const announcements=(function(){
     //function that announces who's turn it is
     const announceTurn=(currentPlayer)=>{
         let playerName=currentPlayer.name;
         announceElement.textContent=`Your turn ${playerName}`
+
     }
     //function that announces the winner of the game
     const announceWinner=(winner)=>{
         announceElement.textContent=`${winner.name} wins!`;
+        createResetButton();
     }
 
     const announceTie=()=>{
         announceElement.textContent=`It's a tie!`
+        createResetButton();
     }
 
     return {announceTurn,announceWinner,announceTie};
 
 }());
+
+
+
+//function that creates the reset button on game end
+function createResetButton(){
+    let button=document.createElement('button');
+    button.textContent=`Restart Game`;
+    button.id='restart-button';
+    resetContainer.appendChild(button);
+    return resetContainer;
+}
