@@ -6,7 +6,7 @@ const namePlayersDialog=document.querySelector('#name-players-dialog');
 const cancelButton=document.querySelector('#cancel-button');
 const submitNamesButton=document.querySelector('#enter-names-button');
 const namePlayersForm=document.querySelector('.name-players-form');
-const announcePlayerTurn=document.querySelector('#announce-turn');
+const announceElement=document.querySelector('#announcement');
 
 
 //event listeners
@@ -98,7 +98,7 @@ function gameFlow(player1,player2){
     let winner;
 
         if(round==0){
-            announceTurn(player1);
+            announcements.announceTurn(player1);
         }
 
 
@@ -108,10 +108,10 @@ function gameFlow(player1,player2){
             currentPlayer=whosTurn(round,player1,player2);
 
             if(currentPlayer===player1){
-                announceTurn(player2);
+                announcements.announceTurn(player2);
             }
             else{
-                announceTurn(player1);
+                announcements.announceTurn(player1);
             }
 
             round++;
@@ -134,16 +134,14 @@ function gameFlow(player1,player2){
                             player2.win=true;
                         }
 
-                        console.log(`${winner.name} wins!`);
-                        return `${winner.name} wins!`;
+                        return announcements.announceWinner(winner);
                     }
 
 
                 }
 
                 if (round==9&&checkWin==null){
-                    console.log("It's a tie!");
-                    return "It's a tie!";
+                    return announcements.announceTie();
                 }
 
             }
@@ -197,8 +195,24 @@ function checkForWin(currentGameboard){
 }
 
 
-//function that announces who's turn it is
-function announceTurn(currentPlayer){
-    let playerName=currentPlayer.name;
-    announcePlayerTurn.textContent=`Your turn ${playerName}`
-}
+
+//announcement object
+
+const announcements=(function(){
+    //function that announces who's turn it is
+    const announceTurn=(currentPlayer)=>{
+        let playerName=currentPlayer.name;
+        announceElement.textContent=`Your turn ${playerName}`
+    }
+    //function that announces the winner of the game
+    const announceWinner=(winner)=>{
+        announceElement.textContent=`${winner.name} wins!`;
+    }
+
+    const announceTie=()=>{
+        announceElement.textContent=`It's a tie!`
+    }
+
+    return {announceTurn,announceWinner,announceTie};
+
+}());
